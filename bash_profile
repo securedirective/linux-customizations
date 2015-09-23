@@ -5,21 +5,73 @@
 #     [...]
 #     . /home/user/.bash_kenneth
 
+# Terminal color codes
+# Note that the \[ and \] are used to exclude those portions from bash's character count, thus avoiding alignment issues
+clrreset="\[\e[m\]"
+fc_black="\[\e[0;30m\]"
+fc_red="\[\e[0;31m\]"
+fc_green="\[\e[0;32m\]"
+fc_yellow="\[\e[0;33m\]"
+fc_blue="\[\e[0;34m\]"
+fc_magenta="\[\e[0;35m\]"
+fc_cyan="\[\e[0;36m\]"
+fc_white="\[\e[0;37m\]"
+fc_black_b="\[\e[1;30m\]"
+fc_red_b="\[\e[1;31m\]"
+fc_green_b="\[\e[1;32m\]"
+fc_yellow_b="\[\e[1;33m\]"
+fc_blue_b="\[\e[1;34m\]"
+fc_magenta_b="\[\e[1;35m\]"
+fc_cyan_b="\[\e[1;36m\]"
+fc_white_b="\[\e[1;37m\]"
+fc_black_u="\[\e[4;30m\]"
+fc_red_u="\[\e[4;31m\]"
+fc_green_u="\[\e[4;32m\]"
+fc_yellow_u="\[\e[4;33m\]"
+fc_ulue_u="4[\e[4;34m\]"
+fc_magenta_u="\[\e[4;35m\]"
+fc_cyan_u="\[\e[4;36m\]"
+fc_white_u="\[\e[4;37m\]"
+bc_black="\[\e[40m\]"
+bc_red="\[\e[41m\]"
+bc_green="\[\e[42m\]"
+bc_yellow="\[\e[43m\]"
+bc_blue="\[\e[44m\]"
+bc_magenta="\[\e[45m\]"
+bc_cyan="\[\e[46m\]"
+bc_white="\[\e[47m\]"
 
 # Custom terminal prompt
-red="\[\e[0;31m\]"
-green="\[\e[0;32m\]"
-blue="\[\e[0;34m\]"
-bluedark="\[\e[1;34m\]"
-none="\[\e[m\]"
 if [[ ${EUID} == 0 ]] ; then
   # Root user
-  PR="${red}#${none}"
+  PS1user="$fc_red#$clrreset "
 else
   # Normal user
-  PR="${green}>${none}"
+  PS1user="$fc_green>$clrreset "
 fi
-PS1="\$(e=\$?; if [[ e -ne 0 ]]; then echo \"${red}ERR=\${e} ${none}\"; fi)${bluedark}\w${none} ${PR} "
+PS1base="$fc_blue_b\W$clrreset $PS1user"
+function __prompt_command() {
+  local EXIT="$?"             # This needs to be first
+  local DATE=$(date "+%H:%M:%S")
+  local COL=$(expr `tput cols` - 10)  # 8 characters for the date, plus 2 for margin
+  if [ -z "$VIRTUAL_ENV" ]; then
+    PS1venv=""
+  else
+    PS1venv="${fc_white_b}${bc_magenta} VENV $clrreset "
+  fi
+  if [ $EXIT != 0 ]; then
+    # Last command failed
+    PS1="${fc_red_b}<$EXIT>$clrreset $PS1venv$PS1base"
+  else
+    # Last command succeeded
+    PS1="$PS1venv$PS1base"
+  fi
+  tput sc; tput cuf $COL; echo -e "\e[0;33m$DATE\e[m"; tput rc
+}
+PROMPT_COMMAND="__prompt_command"
+
+
+
 
 # Add color
 alias grep='grep --colour=auto'
@@ -81,6 +133,12 @@ alias monwlan='sudo tcpdump -n -i wlan0'
 # Show mounts in aligned columns
 alias mount='mount | column -t'
 
+# From within a VM, mount a shared folder from the host machine
+mountvbox()
+{
+sudo mkdir -p /mnt/$1 && sudo mount -t vboxsf $1 /mnt/$1 && l /mnt/$1
+}
+
 # Show the $PATH environment variable with each entry on its own line
 alias path='echo -e ${PATH//:/\\n}'
 
@@ -100,7 +158,7 @@ alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
 
 # Show IP addresses in columns
-alias i='ip -o addr | column -t'
+alias i='ip -o addr | column -t | cut -c -$COLUMNS'
 
 # Show human-readable numbers
 alias df='df -h'
@@ -116,9 +174,6 @@ alias gs='git log -3 --oneline --decorate; git status -sb'
 
 # Output a horizontal rule to visually separate projects
 alias eb="echo; echo '========================================================'; echo"
-
-# From within a VM, mount a shared folder from the host machine
-alias mntvbhost='sudo mkdir -p /mnt/$1 && sudo mount -t vboxsf $1 /mnt/$1 && l /mnt/$1'
 
 # Fix the file permissions recursively that Sublime Text v2 messes up
 alias fixperms='find . -type f -exec chmod 644 {} \; && find . -type d -exec chmod 755 {} \;'
