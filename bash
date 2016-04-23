@@ -1,9 +1,5 @@
-# This file should be stored in ~/.bash_kenneth and made world-readable:
-#   chmod u+r,g+r,o+r .bash_kenneth
-# Then include it into /etc/bash.bashrc, so it will apply to both user and root accounts:
-#   sudo nano /etc/bash.bashrc
-#     [...]
-#     . /home/user/.bash_kenneth
+# This file should be made world-readable, and then included it into /etc/bash.bashrc,
+# so it will apply to both user and root accounts
 
 # Terminal color codes
 # Note that the \[ and \] are used to exclude those portions from bash's character count, thus avoiding alignment issues
@@ -195,6 +191,9 @@
 
 # Fix the file permissions recursively that Sublime Text v2 messes up
     alias fixperms='find . -type f -exec chmod 644 {} \; && find . -type d -exec chmod 755 {} \;'
+
+# Allow aliases to work even when using sudo
+alias sudo='sudo '
 
 # Restore the auto service/file completion after the “sudo” command
     complete -cf sudo
