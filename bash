@@ -263,6 +263,12 @@ alias sudo='sudo '
         fi
     }
 
+# Recursively search all files within the current directory
+# Usage: grepr <searchtext>
+grepr() {
+    grep --color=auto -nr "$1" *
+}
+
 # Set the window/tab title
 # Usage: settitle <title>
     function settitle() {
