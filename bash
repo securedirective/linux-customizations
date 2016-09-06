@@ -88,7 +88,10 @@
     alias msg='sudo tail -f /var/log/syslog'
 
 # Customize my standard ls display
-    alias l="ls -lhvF --time-style='+' --group-directories-first"
+    alias l="ls -AlhvF --time-style='+%F %r ' --group-directories-first"
+
+# List files in date order, newest on top
+    alias lt="echo '-------NEWEST-------' && ls -AlhvFt --time-style='+%F %r ' && echo '-------OLDEST-------'"
 
 # Show file permissions in numeric format in addition to the standard
     alias lp='l | awk '\''{
@@ -110,9 +113,6 @@
         }
         print
     }'\'
-
-# List files in date order, newest on top
-    alias lt="echo '-------NEWEST-------' && ls -lhvFt --time-style='+%F %r  ' && echo '-------OLDEST-------'"
 
 # Show my own processes, with 3/10sec refresh rate
     alias t='htop -d 3 -u $USER'
