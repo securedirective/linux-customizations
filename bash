@@ -159,6 +159,9 @@
 # Show sizes in MB
     alias free='free -m'
 
+# Show every line of a file that is NOT commented out
+    alias nocomment="grep -v -e '^\s*#' -e '^$'"
+
 # List all aliases and functions
     alias al='echo "Aliases:"; alias; echo; echo "Functions (see code with typeset -f <name>):"; declare -F -p | cut -d " " -f 3 | grep -v "^_"'
 
