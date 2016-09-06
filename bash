@@ -38,34 +38,29 @@
     bc_white="\[\e[47m\]"
 
 # Custom terminal prompt
-    if [[ ${EUID} == 0 ]] ; then
-        # Root user
-        PS1user="$fc_red#$clrreset "
-    else
-        # Normal user
-        PS1user="$fc_green>$clrreset "
-    fi
-    PS1base="$fc_blue_b\w$clrreset $PS1user"
     function __prompt_command() {
         local EXIT="$?"             # This needs to be first
-        local DATE=$(date "+%H:%M:%S")
-        local COL=$(expr `tput cols` - 10)  # 8 characters for the date, plus 2 for margin
         if [ -z "$VIRTUAL_ENV" ]; then
-            PS1venv=""
+            local PS1VENV=""
         else
-            PS1venv="${fc_white_b}${bc_magenta} VENV $clrreset "
+            local PS1VENV="${fc_magenta_b}[venv]${clrreset} "
+        fi
+        if [[ ${EUID} == 0 ]] ; then
+            # Root user
+            local PS1BASE="${fc_blue_b}\w ${PS1VENV}${fc_red}\u#${clrreset} "
+        else
+            # Normal user
+            local PS1BASE="${fc_blue_b}\w ${PS1VENV}${fc_green}\u>${clrreset} "
         fi
         if [ $EXIT != 0 ]; then
             # Last command failed
-            PS1="${fc_red_b}<$EXIT>$clrreset $PS1venv$PS1base"
+            PS1="${fc_yellow}$(date '+%H:%M:%S') ${fc_white_b}${bc_red}ERR=$EXIT${clrreset} ${PS1BASE}"
         else
             # Last command succeeded
-            PS1="$PS1venv$PS1base"
+            PS1="${fc_yellow}$(date '+%H:%M:%S')${clrreset} ${PS1BASE}"
         fi
-        tput sc; tput cuf $COL; echo -e "\e[0;33m$DATE\e[m"; tput rc
     }
     PROMPT_COMMAND="__prompt_command"
-
 
 
 
