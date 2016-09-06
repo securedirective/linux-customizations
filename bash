@@ -299,20 +299,19 @@ grepr() {
 # Search for and activate a Python virtual environment
     ve() {
         if [ -z "$VIRTUAL_ENV" ]; then
-            _ave .env/bin/activate ||
-            _ave venv/bin/activate ||
             _ave bin/activate ||
-            _ave ../.env/bin/activate ||
-            _ave ../venv/bin/activate ||
             _ave ../bin/activate ||
-            _ave ../../.env/bin/activate ||
-            _ave ../../venv/bin/activate ||
             _ave ../../bin/activate ||
+            _ave ../../../bin/activate ||
+            _ave ../../../../bin/activate ||
+            _ave ../../../../../bin/activate ||
+            _ave ../../../../../../bin/activate ||
             echo "ERROR: Could not find a virtual environment to source."
         else
             echo
-            echo "Deactivating virtual environment $VIRTUAL_ENV"
+            venv="$VIRTUAL_ENV"
             deactivate
+            echo -e "\e[1;35mDeactivated virtual environment $venv\e[m"
             echo
             echo
         fi
@@ -321,9 +320,8 @@ grepr() {
         if [[ -f "$1" ]]; then
             echo
             echo
-            echo "Executing 'source $1'"
-            source "$1"
-            echo "You are now using virtual environment $VIRTUAL_ENV"
+            . "$1"
+            echo -e "\e[1;35mYou are now using virtual environment $VIRTUAL_ENV\e[m"
             echo
             return 0
         else
