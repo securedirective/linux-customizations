@@ -88,7 +88,8 @@
     alias msg='sudo tail -f /var/log/syslog'
 
 # Customize my standard ls display
-    alias l="ls -AlhvF --time-style='+%F %r ' --group-directories-first"
+    alias l="ls -lhvF --time-style='+%F %r ' --group-directories-first"
+    alias la="ls -AlhvF --time-style='+%F %r ' --group-directories-first"
 
 # List files in date order, newest on top
     alias lt="echo '-------NEWEST-------' && ls -AlhvFt --time-style='+%F %r ' && echo '-------OLDEST-------'"
@@ -160,14 +161,14 @@
     alias free='free -m'
 
 # Show every line of a file that is NOT commented out
-    alias nocomment="grep -v -e '^\s*#' -e '^$'"
+    alias nocomment="grep -v -e '^\s*[#;]' -e '^$'"
 
 # List all aliases and functions
     alias al='echo "Aliases:"; alias; echo; echo "Functions (see code with typeset -f <name>):"; declare -F -p | cut -d " " -f 3 | grep -v "^_"'
 
 # Some useful git aliases
 # show current status of local store
-    alias gsw='watch -d --color -n 1 "[ -n \"\$VIRTUAL_ENV\" ] && searchroot=\"\$VIRTUAL_ENV\" || searchroot=\"./\"; echo -e \"\nFiles with incorrect permissions\nunder \$searchroot, excluding .git/bin/include/lib:\e[0;35m\"; find \$searchroot \( -name .git -or -name bin -or -name include -or -name lib \) -prune -or \( \( -type f -not -perm 644 \) -or \( -type d -not -perm 755 \) \) -printf \"%m %M %h/%f\n\"; echo -e \"\e[m\"; git status -sb; echo; git log -3 --oneline --decorate"'
+    alias gsw='watch -d --color -n 10 "git status -sb; echo; git log -3 --oneline --decorate"'
 # Unstage a file, by resetting the file to the HEAD
     alias gu='git reset HEAD --'
 # Run a git diff, followed by a git add if requested
@@ -197,7 +198,7 @@ alias sudo='sudo '
     complete -cf sudo
 
 # Set default editor
-    export EDITOR=/usr/bin/nano
+    export EDITOR=nano
 
 # Various customizations to the command history
     export HISTCONTROL=ignoreboth       # Ignore any command that begins with whitespace, and also do not store duplicate commands in the history
@@ -299,13 +300,13 @@ grepr() {
 # Search for and activate a Python virtual environment
     ve() {
         if [ -z "$VIRTUAL_ENV" ]; then
-            _ave bin/activate ||
-            _ave ../bin/activate ||
-            _ave ../../bin/activate ||
-            _ave ../../../bin/activate ||
-            _ave ../../../../bin/activate ||
-            _ave ../../../../../bin/activate ||
-            _ave ../../../../../../bin/activate ||
+            _ve bin/activate ||
+            _ve venv/bin/activate ||
+            _ve .venv/bin/activate ||
+            _ve ../venv/bin/activate ||
+            _ve ../.venv/bin/activate ||
+            _ve ../../venv/bin/activate ||
+            _ve ../../.venv/bin/activate ||
             echo "ERROR: Could not find a virtual environment to source."
         else
             echo
@@ -316,7 +317,7 @@ grepr() {
             echo
         fi
     }
-    _ave() {
+    _ve() {
         if [[ -f "$1" ]]; then
             echo
             echo

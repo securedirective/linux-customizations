@@ -4,3 +4,4 @@ set smooth
 set smarthome
 set tabsize 4
 set const
+set nowrap
