@@ -126,7 +126,7 @@
     alias monwlan='sudo tcpdump -n -i wlan0'
 
 # Show mounts in aligned columns
-    alias mount='mount | column -t'
+    alias m='mount | column -t'
 
 # From within a VM, mount a shared folder from the host machine
     mountvbox() {
@@ -164,10 +164,11 @@
     alias nocomment="grep -v -e '^\s*[#;]' -e '^$'"
 
 # List all aliases and functions
-    alias al='echo "Aliases:"; alias; echo; echo "Functions (see code with typeset -f <name>):"; declare -F -p | cut -d " " -f 3 | grep -v "^_"'
+    alias al='echo "Aliases:"; alias; echo; echo "Functions (see code with type <name>):"; declare -F -p | cut -d " " -f 3 | grep -v "^_"'
 
 # Some useful git aliases
 # show current status of local store
+    alias gs='git status -sb; echo; git log -3 --oneline --decorate'
     alias gsw='watch -d --color -n 10 "git status -sb; echo; git log -3 --oneline --decorate"'
 # Unstage a file, by resetting the file to the HEAD
     alias gu='git reset HEAD --'
