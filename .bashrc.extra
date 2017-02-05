@@ -47,10 +47,10 @@
         fi
         if [[ ${EUID} == 0 ]] ; then
             # Root user
-            local PS1BASE="${fc_blue_b}\w ${PS1VENV}${fc_red}\u#${clrreset} "
+            local PS1BASE="${fc_cyan_b}\w ${PS1VENV}${fc_red}\u#${clrreset} "
         else
             # Normal user
-            local PS1BASE="${fc_blue_b}\w ${PS1VENV}${fc_green}\u>${clrreset} "
+            local PS1BASE="${fc_cyan_b}\w ${PS1VENV}${fc_green}\u>${clrreset} "
         fi
         if [ $EXIT != 0 ]; then
             # Last command failed
