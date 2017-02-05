@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Deterimes Linux distribution type and returns one of the following values:
+# Deterimes Linux distribution
 
 # redhat
 # redhat/fedora
@@ -14,20 +14,10 @@
 # debian/raspbian
 # arch
 
-# Each item will be on its own line, so you can use head/tail to check a particular item.
-
-#uname -a 2>/dev/null
-#cat /etc/version 2>/dev/null
-#cat /proc/version 2>/dev/null
-#lsb_release -a 2>/dev/null
-#cat /etc/issue 2>/dev/null
-#cat /etc/*release
-
-
 if [ -e "/etc/redhat-release" ]; then
   echo "redhat"
   if [ -e "/etc/centos-release" ]; then
-    echo -en "centos\t"; tr -d '\n' < /etc/centos-release
+    echo -en "centos\t"; cat /etc/centos-release
     exit
   fi
 elif [ -e "/etc/debian_version" ]; then
