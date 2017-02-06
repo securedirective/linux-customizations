@@ -23,11 +23,10 @@ elif [ -e "/etc/redhat-release" ]; then
     exit
   fi
 elif [ -e "/etc/debian_version" ]; then
-  echo -en "debian:\t"; tr -d '\n' < /etc/debian_version; echo -n ', '; grep '^PRETTY_NAME=' /etc/os-release | sed -n -e '/PRETTY_NAME=/ s/^\w*=\"//;s/\"$//p'
-  #tr -d '\n' < /etc/debian_version; sed -n -e '/PRETTY_NAME=/ s/\w*=\"//;s/\"$//p' /etc/os-release
-  #if grep -q Ubuntu /etc/os-release; then
-  #  echo -en "ubuntu:\t"; sed -n -e '/PRETTY_NAME=/ s/\w*=\"//;s/\"$//p' /etc/os-release
-  #fi
+  echo -en "debian:\t"; tr -d '\n' < /etc/debian_version; echo -n ', '; grep '^PRETTY_NAME=' /etc/os-release | sed -n -e 's/^\w*=\"//;s/\"$//p'
+  if grep -q Ubuntu /etc/os-release; then
+    echo -en "ubuntu:\t"; grep '^PRETTY_NAME=' /etc/os-release | sed -n -e 's/^\w*=\"//;s/\"$//p'
+  fi
 else
   echo "unknown distro"
 fi
