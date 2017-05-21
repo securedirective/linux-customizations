@@ -168,8 +168,8 @@
 
 # Some useful git aliases
 # show current status of local store
-    alias gs='git status -sb; echo; git log -3 --oneline --decorate'
-    alias gsw='watch -d --color -n 10 "git status -sb; echo; git log -3 --oneline --decorate"'
+    alias gs='git status -sb; echo; git log -3 --oneline --decorate | cat'
+    alias gsw='watch -d --color -n 10 "git status -sb; echo; git log -3 --oneline --decorate | cat"'
 # Unstage a file, by resetting the file to the HEAD
     alias gu='git reset HEAD --'
 # Run a git diff, followed by a git add if requested
