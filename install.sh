@@ -1,26 +1,34 @@
 #!/usr/bin/env bash
 
-SCRIPT=`realpath $0`
-SCRIPTPATH=`dirname $SCRIPT`
+SCRIPTPATH="/usr/local/etc/linux-customizations"
 
-function create_symlink {
-  ln -fs $2 $1 && echo "Symlinked $1 to $2" || echo "Failed to symlink $1 to $2"
-}
-create_symlink ~/.nanorc $SCRIPTPATH/.nanorc
-create_symlink ~/.tmux.conf $SCRIPTPATH/.tmux.conf
-
-bashextra=". $SCRIPTPATH/.bashrc.extra"
-function install_bash {
-  if [ -e $1 ]; then
-    if (grep  -Fxq "$bashextra" "$1" || echo "$bashextra" >> "$1"); then
-      echo "Included .bashrc.extra into $1"
-    else
-      echo "Failed to include .bashrc.extra into $1"
-      return 1
+function create_symlink_and_backup {
+    # If destination file already exists and is not a symlink, we should back it up
+    if [ -e "$1" ] && [ ! -h "$1" ]; then
+        bk="$1.bak$(date +%s)"
+        mv $1 $bk >/dev/null && echo "Moved existing $1 to $bk"
     fi
-  else
-    echo "Could not find $1"
-    return 1
-  fi
+    ln -fs $2 $1 && echo "Symlinked $1 to point at $2" || echo "Failed to symlink $1 to point at $2"
+}
+create_symlink_and_backup ~/.nanorc $SCRIPTPATH/.nanorc
+create_symlink_and_backup ~/.tmux.conf $SCRIPTPATH/.tmux.conf
+
+bashextra="$SCRIPTPATH/.bashrc.extra"
+includestmt=". $bashextra"
+function install_bash {
+    if grep -Fxq "$includestmt" "$1" 2>/dev/null; then
+        echo "Your $1 already links to $bashextra"
+    else
+        if echo -e "\n$includestmt" >> "$1"; then
+            echo "Appended a link to $bashextra to $1"
+        else
+            echo "Failed to modify $1"
+            return 1
+        fi
+    fi
 }
 install_bash ~/.bashrc
+if [[ "$(uname)" == "Darwin" ]]; then
+    # When new terminal windows are opened, only ~/.bash_profile is loaded. But when 'bash' is run manually, only ~/.bashrc is loaded. So we must link ourselves into both.
+    install_bash ~/.bash_profile
+fi
