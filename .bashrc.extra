@@ -45,6 +45,8 @@ fi
     bc_white="\033[47m"; bc_white_enc="\[\033[47m\]"
 
 # Custom terminal prompt
+# HH:MM:SS host directory user>
+# HH:MM:SS host directory root#
     __prompt_command() {
         local EXIT="$?"             # This needs to be first
         if [[ -z "$VIRTUAL_ENV" ]]; then
@@ -54,17 +56,17 @@ fi
         fi
         if [[ ${EUID} == 0 ]] ; then
             # Root user
-            local PS1BASE="${fc_cyan_b_enc}\w ${PS1VENV}${fc_red_enc}\u#${clrreset_enc} "
+            local PS1BASE="\h ${fc_cyan_b_enc}\w ${PS1VENV}${fc_red_enc}\u#${clrreset_enc} "
         else
             # Normal user
-            local PS1BASE="${fc_cyan_b_enc}\w ${PS1VENV}${fc_green_enc}\u>${clrreset_enc} "
+            local PS1BASE="\h ${fc_cyan_b_enc}\w ${PS1VENV}${fc_green_enc}\u>${clrreset_enc} "
         fi
         if [[ $EXIT != 0 ]]; then
             # Last command failed
-            PS1="${fc_yellow_enc}$(date '+%H:%M:%S') ${fc_white_b_enc}${bc_red_enc}ERR=$EXIT${clrreset_enc} ${PS1BASE}"
+            PS1="$(date '+%H:%M:%S') ${bc_red_enc}ERR=$EXIT${clrreset_enc} ${PS1BASE}"
         else
             # Last command succeeded
-            PS1="${fc_yellow_enc}$(date '+%H:%M:%S')${clrreset_enc} ${PS1BASE}"
+            PS1="$(date '+%H:%M:%S') ${PS1BASE}"
         fi
     }
     PROMPT_COMMAND="__prompt_command"

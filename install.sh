@@ -17,10 +17,10 @@ bashextra="$SCRIPTPATH/.bashrc.extra"
 includestmt=". $bashextra"
 function install_bash {
     if grep -Fxq "$includestmt" "$1" 2>/dev/null; then
-        echo "Your $1 already links to $bashextra"
+        echo "Your $1 already includes $bashextra"
     else
         if echo -e "\n$includestmt" >> "$1"; then
-            echo "Appended a link to $bashextra to $1"
+            echo "Updated $1 to include $bashextra"
         else
             echo "Failed to modify $1"
             return 1
