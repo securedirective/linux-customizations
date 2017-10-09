@@ -184,7 +184,7 @@ fi
 
 # Some useful git aliases
 # show current status of local store
-    alias gs='git status -sb; echo; git log -3 --oneline --decorate | cat'
+    alias gs='git status -sb; echo; git log -6 --oneline --decorate'
     alias gsw='watch -d -n 10 "git status -sb; echo; git log -3 --oneline --decorate | cat"'
 # Unstage a file, by resetting the file to the HEAD
     alias gu='git reset HEAD --'
