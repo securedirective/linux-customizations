@@ -48,25 +48,21 @@ fi
 # HH:MM:SS host directory user>
 # HH:MM:SS host directory root#
     __prompt_command() {
-        local EXIT="$?"             # This needs to be first
-        if [[ -z "$VIRTUAL_ENV" ]]; then
-            local PS1VENV=""
-        else
-            local PS1VENV="${fc_magenta_b_enc}[venv]${clrreset_enc} "
+        local EXIT="$?" # This needs to be the first line to be able to capture the real code
+        PS1="${fc_blue_b_enc}\t ${fc_white_enc}\j ${fc_cyan_b_enc}\u@\h "
+        if [[ $EXIT != 0 ]]; then
+            # Last command failed, so add a prefix
+            PS1="\[\033[41;37m\]ERR=${EXIT}${clrreset_enc} ${PS1}"
+        fi
+        if [[ -n "$VIRTUAL_ENV" ]]; then
+            PS1="${PS1}${fc_magenta_b_enc}[venv] "
         fi
         if [[ ${EUID} == 0 ]] ; then
             # Root user
-            local PS1BASE="\h ${fc_cyan_b_enc}\w ${PS1VENV}${fc_red_enc}\u#${clrreset_enc} "
+            PS1="${PS1}${fc_red_enc}\W #${clrreset_enc} "
         else
             # Normal user
-            local PS1BASE="\h ${fc_cyan_b_enc}\w ${PS1VENV}${fc_green_enc}\u>${clrreset_enc} "
-        fi
-        if [[ $EXIT != 0 ]]; then
-            # Last command failed
-            PS1="$(date '+%H:%M:%S') ${bc_red_enc}ERR=$EXIT${clrreset_enc} ${PS1BASE}"
-        else
-            # Last command succeeded
-            PS1="$(date '+%H:%M:%S') ${PS1BASE}"
+            PS1="${PS1}${fc_green_enc}\W >${clrreset_enc} "
         fi
     }
     PROMPT_COMMAND="__prompt_command"
