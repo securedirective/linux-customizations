@@ -15,16 +15,13 @@ Before anything is commited to the `master` branch, it must be tested to work on
 ## Download and install
 ```
 cd /usr/local/etc
-git clone https://github.com/securedirective/linux-customizations
+sudo -H git clone https://github.com/securedirective/linux-customizations
 /usr/local/etc/linux-customizations/install.sh
 ```
 
 ## Install for root user
-Do not simply run this with `sudo` to install it as the root user. MacOS (and maybe some other distros) does not update the `~` alias to point to root's home directory, even though the script runs as the root user. So what actually happens is the install script will create files in *your* home directory, but with `root` as the owner... definitely not what you want!
+```
+sudo -H /usr/local/etc/linux-customizations/install.sh
+```
 
-To avoid this, don't use shortcuts like `sudo`. Login the old-fashioned way and install like this:
-```
-sudo su
-/usr/local/etc/linux-customizations/install.sh
-exit
-```
+The -H is important, as this allows the script to run under the root user's context. Without this, MacOS and some Linux distros simply grant admin-level rights but still run the script under the current user's context.
