@@ -83,6 +83,7 @@ fi
     alias ..='cd ..'
     alias cd..='cd ..'
     alias c='clear'
+    alias cc="clear; printf '\033[3J'"
     alias h='history'
     alias j='jobs'
 
